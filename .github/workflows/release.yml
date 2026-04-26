@@ -15,7 +15,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Xcode
-        uses: lpgneg19/setup-xcode@v2
+        uses: SteveShi/setup-xcode@v2
         with:
           xcode-version: 'latest-stable'
 
