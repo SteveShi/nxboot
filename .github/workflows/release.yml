@@ -57,8 +57,8 @@ jobs:
         run: |
           # Try to get the latest version's notes from CHANGELOG.md
           if [ -f CHANGELOG.md ]; then
-            # Extract content between the first two ## headers
-            sed -n '/^## \[2.1.0\]/,/^## /p' CHANGELOG.md | sed '1d;$d' > changelog.txt
+            # Extract content between the first two ## headers (latest version)
+            awk '/^## \[[0-9]/{if(++count==2) exit; if(count==1) next} count==1' CHANGELOG.md > changelog.txt
           else
             git log -n 10 --pretty=format:"* %s" > changelog.txt
           fi
