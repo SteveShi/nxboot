@@ -19,8 +19,8 @@
 #define ESC       "\033[0m"
 #define ESC_LN    ESC "\n"
 
-#define COPYRIGHT_STR "Copyright 2018-2024 Oliver Kuckertz <oliver.kuckertz@mologie.de>"
-#define LICENSE_STR   "Licensed under the GPLv3. https://github.com/mologie/nxboot#license"
+#define COPYRIGHT_STR "Copyright 2018-2024 Oliver Kuckertz <oliver.kuckertz@mologie.de>, 2026 SteveShi"
+#define LICENSE_STR   "Licensed under the GPLv3. https://github.com/steveshi0/nxboot#license"
 
 static volatile sig_atomic_t gTerm = 0;
 
@@ -131,7 +131,7 @@ static void printUsage(void) {
             "  nxboot hekate_ctcaer_6.0.4.bin (boots Hekate)\n"
             "  nxboot --hekate ums sd hekate_ctcaer_6.0.4.bin (boots Hekate into UMS SD mode)\n"
             "\n"
-            "for updates visit: https://mologie.github.io/nxboot/\n");
+            "for updates visit: https://github.com/steveshi0/nxboot\n");
 }
 
 static void printHelp(void) {

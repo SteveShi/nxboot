@@ -14,7 +14,12 @@ class DeviceManager: NSObject, NXUSBDeviceEnumeratorDelegate {
             UserDefaults.standard.set(isAutoBootEnabled, forKey: "isAutoBootEnabled")
         }
     }
-    
+
+    var usbReadTimeoutMS: UInt32 {
+        let timeout = UserDefaults.standard.object(forKey: "usbReadTimeoutMS") as? UInt32 ?? AppConstants.defaultUSBReadTimeoutMS
+        return max(AppConstants.minUSBReadTimeoutMS, min(timeout, AppConstants.maxUSBReadTimeoutMS))
+    }
+
     private let usbEnum = NXUSBDeviceEnumerator()
     private var readTask: Task<Void, Never>?
     
@@ -26,7 +31,7 @@ class DeviceManager: NSObject, NXUSBDeviceEnumeratorDelegate {
         self.isAutoBootEnabled = UserDefaults.standard.bool(forKey: "isAutoBootEnabled")
         usbEnum.delegate = self
         // Filter for Tegra X1 RCM (NVIDIA Corp. Recovery Mode)
-        usbEnum.setFilterForVendorID(0x0955, productID: 0x7321)
+        usbEnum.setFilterForVendorID(AppConstants.tegraX1VendorID, productID: AppConstants.tegraX1ProductID)
     }
     
     func startMonitoring() {
@@ -77,13 +82,13 @@ class DeviceManager: NSObject, NXUSBDeviceEnumeratorDelegate {
             
             defer { NXExecReleaseDeviceInterface(&desc) }
             
-            let bufferSize = 0x1000
+            let bufferSize = AppConstants.usbBufferSize
             let rdbuf = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
             defer { rdbuf.deallocate() }
-            
+
             while !Task.isCancelled {
                 var btransf: UInt32 = UInt32(bufferSize)
-                let kr = NXReadPipeTO(desc.intf, desc.readRef, rdbuf, &btransf, 1000)
+                let kr = NXReadPipeTO(desc.intf, desc.readRef, rdbuf, &btransf, self.usbReadTimeoutMS)
                 
                 if kr == Int32(bitPattern: 0xE0004051) { // bulk read error, expected when device disconnects
                     Logger.shared.addLog("USB EP1 stream terminated", type: .system)
@@ -103,8 +108,8 @@ class DeviceManager: NSObject, NXUSBDeviceEnumeratorDelegate {
                     Logger.shared.addLog("Read error: \(String(format: "0x%08x", kr))", type: .system)
                     break
                 }
-                
-                try? await Task.sleep(nanoseconds: 10_000_000) // 10ms
+
+                try? await Task.sleep(nanoseconds: AppConstants.usbReadSleepNS)
             }
         }
     }

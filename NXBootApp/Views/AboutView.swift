@@ -19,8 +19,10 @@ struct AboutView: View {
                         Text("NXBoot")
                             .font(.title)
                             .bold()
-                        Text("\(String(localized: "Version")) 2.1.0")
-                            .foregroundColor(.secondary)
+                        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+                            Text("\(String(localized: "Version")) \(version)")
+                                .foregroundColor(.secondary)
+                        }
                     }
                 }
                 .padding(.top, 40)
@@ -55,8 +57,8 @@ struct AboutView: View {
                 Spacer(minLength: 40)
                 
                 VStack(spacing: 2) {
-                    Text("© 2018-2024 Oliver Kuckertz")
-                    Text("© 2026 SteveShi")
+                    Text(AppConstants.originalCopyright)
+                    Text(AppConstants.currentCopyright)
                 }
                 .font(.caption2)
                 .foregroundColor(.secondary)
@@ -68,7 +70,7 @@ struct AboutView: View {
         .alert(String(localized: "Install CLI Tool"), isPresented: $showingSuccess) {
             Button("OK", role: .cancel) { }
         } message: {
-            Text(String(localized: "The CLI tool has been successfully installed to /usr/local/bin/nxboot"))
+            Text(String(localized: "The CLI tool has been successfully installed to \(AppConstants.cliInstallPath)"))
         }
         .alert(String(localized: "Install CLI Tool"), isPresented: $showingError) {
             Button("OK", role: .cancel) { }

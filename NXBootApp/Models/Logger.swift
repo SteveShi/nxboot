@@ -19,7 +19,15 @@ class Logger {
     
     var systemLogs: [LogEntry] = []
     var deviceLogs: [LogEntry] = []
-    
+
+    var maxSystemLogEntries: Int {
+        UserDefaults.standard.object(forKey: "maxSystemLogEntries") as? Int ?? AppConstants.defaultMaxSystemLogEntries
+    }
+
+    var maxDeviceLogEntries: Int {
+        UserDefaults.standard.object(forKey: "maxDeviceLogEntries") as? Int ?? AppConstants.defaultMaxDeviceLogEntries
+    }
+
     private init() {
         // Handle logs from Objective-C
         NotificationCenter.default.addObserver(forName: NSNotification.Name("NXLogNotification"), object: nil, queue: .main) { notification in
@@ -34,10 +42,10 @@ class Logger {
         switch type {
         case .system:
             systemLogs.append(entry)
-            if systemLogs.count > 500 { systemLogs.removeFirst() }
+            if systemLogs.count > maxSystemLogEntries { systemLogs.removeFirst() }
         case .device:
             deviceLogs.append(entry)
-            if deviceLogs.count > 1000 { deviceLogs.removeFirst() }
+            if deviceLogs.count > maxDeviceLogEntries { deviceLogs.removeFirst() }
         }
     }
     

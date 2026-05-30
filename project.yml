@@ -1,6 +1,6 @@
 name: NXBoot
 options:
-  bundleIdPrefix: io.mologie
+  bundleIdPrefix: io.steveshi
   deploymentTarget:
     iOS: 12.0
     macOS: 14.0
@@ -23,12 +23,12 @@ targets:
       - NXBootCmd
       - NXBootKit
     settings:
-      PRODUCT_BUNDLE_IDENTIFIER: io.mologie.nxboot.cmd
+      PRODUCT_BUNDLE_IDENTIFIER: io.steveshi.nxboot.cmd
       MACOSX_DEPLOYMENT_TARGET: 14.0
       CODE_SIGNING_ALLOWED: NO
-      MARKETING_VERSION: 2.1.0
+      MARKETING_VERSION: 2.2.0
       CURRENT_PROJECT_VERSION: 1
-      GCC_PREPROCESSOR_DEFINITIONS: $(inherited) NXBOOT_VERSION=\"2.1.0\" NXBOOT_BUILDNO=1
+      GCC_PREPROCESSOR_DEFINITIONS: $(inherited) NXBOOT_VERSION=\"2.2.0\" NXBOOT_BUILDNO=1
     frameworks:
       - framework: IOKit
       - framework: CoreFoundation
@@ -46,13 +46,13 @@ targets:
       - path: Shared/intermezzo.bin
     settings:
       PRODUCT_NAME: NXBoot
-      PRODUCT_BUNDLE_IDENTIFIER: io.mologie.nxboot.app
+      PRODUCT_BUNDLE_IDENTIFIER: io.steveshi.nxboot.app
       INFOPLIST_FILE: NXBootApp/Info.plist
       SWIFT_VERSION: 5.0
       SDKROOT: macosx
       MACOSX_DEPLOYMENT_TARGET: 14.0
       ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-      MARKETING_VERSION: 2.1.0
+      MARKETING_VERSION: 2.2.0
       CURRENT_PROJECT_VERSION: 1
       NSHumanReadableCopyright: "© 2018-2024 Oliver Kuckertz, © 2026 SteveShi"
       HEADER_SEARCH_PATHS: $(inherited) $(PROJECT_DIR)

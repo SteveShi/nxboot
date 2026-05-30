@@ -45,12 +45,13 @@ class PayloadManager {
     
     private var payloadsDirectory: URL {
         let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        let payloadsDir = appSupport.appendingPathComponent("NXBoot/Payloads", isDirectory: true)
-        
+        let bundleID = Bundle.main.bundleIdentifier ?? "io.steveshi.nxboot.app"
+        let payloadsDir = appSupport.appendingPathComponent("\(bundleID)/\(AppConstants.payloadsSubdirectory)", isDirectory: true)
+
         if !fileManager.fileExists(atPath: payloadsDir.path) {
             try? fileManager.createDirectory(at: payloadsDir, withIntermediateDirectories: true)
         }
-        
+
         return payloadsDir
     }
     
