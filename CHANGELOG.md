@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.1] - 2026-06-10
+
+<div lang="zh-Hans">
+
+### 修复
+- **修复 Switch 注入失效问题**：修复了点击“注入 Payload”按钮及自动注入没有反应的 Bug，补全了应用包中缺失的 `intermezzo.bin` 资源。
+- **命令行工具修复**：为 `nxboot` 命令行工具嵌入了默认 relocator (`intermezzo.bin`)。
+- **Swift 6 严格并发适配**：解决了严格并发隔离模式下关于 `NXUSBDeviceInterface **` 指针数据竞争的编译报错。
+- **消除硬编码字符串**：移除了所有硬编码字符串并补全了完整的英文与中文本地化。
+
+</div>
+
+---
+
+<div lang="en">
+
+### Fixed
+- **Fixed Switch Injection Failure**: Resolved the bug where clicking "Inject Payload" or auto-booting had no effect, restoring the missing `intermezzo.bin` resource in the application bundle.
+- **CLI Tool Fix**: Embedded the default relocator (`intermezzo.bin`) into the `nxboot` command-line tool.
+- **Swift 6 Strict Concurrency**: Fixed compilation errors concerning strict region isolation of non-Sendable `NXUSBDeviceInterface **` pointers.
+- **Localization Polish**: Removed all hardcoded strings and completed full English and Simplified Chinese localizations.
+
+</div>
+
 ## [2.2.0] - 2026-05-31
 
 ### Added
