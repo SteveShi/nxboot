@@ -6,6 +6,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class NXUSBDeviceEnumerator;
 
+__attribute__((swift_attr("@MainActor")))
 @protocol NXUSBDeviceEnumeratorDelegate
 - (void)usbDeviceEnumerator:(NXUSBDeviceEnumerator *)deviceEnum deviceConnected:(NXUSBDevice *)device;
 - (void)usbDeviceEnumerator:(NXUSBDeviceEnumerator *)deviceEnum deviceDisconnected:(NXUSBDevice *)device;

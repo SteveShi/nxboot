@@ -2,6 +2,7 @@ import Foundation
 import Observation
 
 @Observable
+@MainActor
 class Logger {
     static let shared = Logger()
     
@@ -32,7 +33,9 @@ class Logger {
         // Handle logs from Objective-C
         NotificationCenter.default.addObserver(forName: NSNotification.Name("NXLogNotification"), object: nil, queue: .main) { notification in
             if let message = notification.userInfo?["message"] as? String {
-                self.addLog(message, type: .system)
+                Task { @MainActor in
+                    self.addLog(message, type: .system)
+                }
             }
         }
     }

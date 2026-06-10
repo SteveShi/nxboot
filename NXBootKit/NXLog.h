@@ -1,6 +1,7 @@
 #import <NXBootKit/NXVisibility.h>
 
 NXBOOTKIT_PUBLIC extern BOOL NXBootKitDebugEnabled;
+NXBOOTKIT_PUBLIC void NXBootKitSetDebugEnabled(BOOL enabled);
 
 #ifdef __OBJC__
 #import <Foundation/Foundation.h>

@@ -52,3 +52,37 @@
 "CLI tool is already installed." = "CLI tool is already installed.";
 "The CLI tool has been successfully installed to /usr/local/bin/nxboot" = "The CLI tool has been successfully installed to /usr/local/bin/nxboot";
 "Failed to install CLI tool: %@" = "Failed to install CLI tool: %@";
+
+/* Error Logs */
+"No payload selected" = "No payload selected";
+"intermezzo.bin not found in bundle resources" = "intermezzo.bin not found in bundle resources";
+"Failed to load intermezzo.bin" = "Failed to load intermezzo.bin";
+"Failed to read payload file" = "Failed to read payload file";
+
+/* Newly Localized Keys */
+"Error: No device connected" = "Error: No device connected";
+"Injection failed: No device connected" = "Injection failed: No device connected";
+"Injecting payload..." = "Injecting payload...";
+"Starting injection..." = "Starting injection...";
+"Success: Payload injected!" = "Success: Payload injected!";
+"Payload injected successfully!" = "Payload injected successfully!";
+"Unknown error" = "Unknown error";
+"Error: Injection failed: %@" = "Error: Injection failed: %@";
+"Injection failed: %@" = "Injection failed: %@";
+"Attempting to read from USB EP1..." = "Attempting to read from USB EP1...";
+"unknown" = "unknown";
+"Could not acquire device interface for reading: %@" = "Could not acquire device interface for reading: %@";
+"USB EP1 stream terminated" = "USB EP1 stream terminated";
+"Received %lld bytes of binary data" = "Received %lld bytes of binary data";
+"Read error: %@" = "Read error: %@";
+"Device connected: Nintendo Switch (RCM)" = "Device connected: Nintendo Switch (RCM)";
+"Auto-boot enabled, injecting default payload..." = "Auto-boot enabled, injecting default payload...";
+"Auto-boot enabled, but no default payload or relocator found." = "Auto-boot enabled, but no default payload or relocator found.";
+"Device disconnected" = "Device disconnected";
+"Error: %@" = "Error: %@";
+"USB Error: %@" = "USB Error: %@";
+"Import failed: %@" = "Import failed: %@";
+"e.g. atmospheric" = "e.g. atmospheric";
+"Choose Hekate payload in Payloads tab to configure options." = "Choose Hekate payload in Payloads tab to configure options.";
+"OK" = "OK";
+

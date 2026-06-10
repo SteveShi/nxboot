@@ -52,3 +52,37 @@
 "CLI tool is already installed." = "命令行工具已安装。";
 "The CLI tool has been successfully installed to /usr/local/bin/nxboot" = "命令行工具已成功安装至 /usr/local/bin/nxboot";
 "Failed to install CLI tool: %@" = "安装命令行工具失败：%@";
+
+/* Error Logs */
+"No payload selected" = "未选择 Payload";
+"intermezzo.bin not found in bundle resources" = "在应用包资源中未找到 intermezzo.bin";
+"Failed to load intermezzo.bin" = "加载 intermezzo.bin 失败";
+"Failed to read payload file" = "读取 Payload 文件失败";
+
+/* Newly Localized Keys */
+"Error: No device connected" = "错误：未连接设备";
+"Injection failed: No device connected" = "注入失败：未连接设备";
+"Injecting payload..." = "正在注入 Payload...";
+"Starting injection..." = "开始注入...";
+"Success: Payload injected!" = "成功：Payload 已注入！";
+"Payload injected successfully!" = "Payload 注入成功！";
+"Unknown error" = "未知错误";
+"Error: Injection failed: %@" = "错误：注入失败：%@";
+"Injection failed: %@" = "注入失败：%@";
+"Attempting to read from USB EP1..." = "正在尝试从 USB EP1 读取...";
+"unknown" = "未知";
+"Could not acquire device interface for reading: %@" = "无法获取用于读取的设备接口：%@";
+"USB EP1 stream terminated" = "USB EP1 流已终止";
+"Received %lld bytes of binary data" = "已接收 %lld 字节的二进制数据";
+"Read error: %@" = "读取错误：%@";
+"Device connected: Nintendo Switch (RCM)" = "设备已连接: Nintendo Switch (RCM)";
+"Auto-boot enabled, injecting default payload..." = "自动注入已开启，正在注入默认 Payload...";
+"Auto-boot enabled, but no default payload or relocator found." = "自动注入已开启，但未找到默认 Payload 或 Relocator。";
+"Device disconnected" = "设备已断开连接";
+"Error: %@" = "错误：%@";
+"USB Error: %@" = "USB 错误：%@";
+"Import failed: %@" = "导入失败：%@";
+"e.g. atmospheric" = "例如 atmospheric";
+"Choose Hekate payload in Payloads tab to configure options." = "在“Payload 列表”标签页中选择 Hekate payload 以配置选项。";
+"OK" = "好";
+

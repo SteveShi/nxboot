@@ -68,12 +68,12 @@ struct AboutView: View {
         }
         .background(Color(NSColor.windowBackgroundColor))
         .alert(String(localized: "Install CLI Tool"), isPresented: $showingSuccess) {
-            Button("OK", role: .cancel) { }
+            Button(String(localized: "OK"), role: .cancel) { }
         } message: {
             Text(String(localized: "The CLI tool has been successfully installed to \(AppConstants.cliInstallPath)"))
         }
         .alert(String(localized: "Install CLI Tool"), isPresented: $showingError) {
-            Button("OK", role: .cancel) { }
+            Button(String(localized: "OK"), role: .cancel) { }
         } message: {
             Text(String(localized: "Failed to install CLI tool: \(errorMessage)"))
         }

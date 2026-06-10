@@ -50,7 +50,7 @@ struct PayloadView: View {
                     payloadManager.importPayload(from: url)
                 }
             case .failure(let error):
-                Logger.shared.addLog("Import failed: \(error.localizedDescription)", type: .system)
+                Logger.shared.addLog(String(localized: "Import failed: \(error.localizedDescription)"), type: .system)
             }
         }
         .navigationTitle(String(localized: "Payloads"))

@@ -53,14 +53,25 @@ struct DashboardView: View {
             // Core Actions
             VStack(spacing: 20) {
                 Button(action: {
-                    if let payload = selectedPayload,
-                       let relocatorURL = Bundle.main.url(forResource: "intermezzo", withExtension: "bin"),
-                       let relocatorData = try? Data(contentsOf: relocatorURL),
-                       let payloadData = try? Data(contentsOf: payload.path) {
-                        
-                        let finalPayloadData = hekateManager.customize(payloadData: payloadData)
-                        deviceManager.inject(payloadData: finalPayloadData, relocatorData: relocatorData)
+                    guard let payload = selectedPayload else {
+                        Logger.shared.addLog(String(localized: "No payload selected"), type: .system)
+                        return
                     }
+                    guard let relocatorURL = Bundle.main.url(forResource: "intermezzo", withExtension: "bin") else {
+                        Logger.shared.addLog(String(localized: "intermezzo.bin not found in bundle resources"), type: .system)
+                        return
+                    }
+                    guard let relocatorData = try? Data(contentsOf: relocatorURL) else {
+                        Logger.shared.addLog(String(localized: "Failed to load intermezzo.bin"), type: .system)
+                        return
+                    }
+                    guard let payloadData = try? Data(contentsOf: payload.path) else {
+                        Logger.shared.addLog(String(localized: "Failed to read payload file"), type: .system)
+                        return
+                    }
+                    
+                    let finalPayloadData = hekateManager.customize(payloadData: payloadData)
+                    deviceManager.inject(payloadData: finalPayloadData, relocatorData: relocatorData)
                 }) {
                     HStack {
                         Image(systemName: "bolt.fill")
@@ -129,10 +140,20 @@ struct DashboardView: View {
     
     private func setupAutoInject() {
         deviceManager.onAutoInject = {
-            guard let payload = selectedPayload,
-                  let relocatorURL = Bundle.main.url(forResource: "intermezzo", withExtension: "bin"),
-                  let relocatorData = try? Data(contentsOf: relocatorURL),
-                  let payloadData = try? Data(contentsOf: payload.path) else {
+            guard let payload = selectedPayload else {
+                Logger.shared.addLog(String(localized: "No payload selected"), type: .system)
+                return (nil, nil)
+            }
+            guard let relocatorURL = Bundle.main.url(forResource: "intermezzo", withExtension: "bin") else {
+                Logger.shared.addLog(String(localized: "intermezzo.bin not found in bundle resources"), type: .system)
+                return (nil, nil)
+            }
+            guard let relocatorData = try? Data(contentsOf: relocatorURL) else {
+                Logger.shared.addLog(String(localized: "Failed to load intermezzo.bin"), type: .system)
+                return (nil, nil)
+            }
+            guard let payloadData = try? Data(contentsOf: payload.path) else {
+                Logger.shared.addLog(String(localized: "Failed to read payload file"), type: .system)
                 return (nil, nil)
             }
             

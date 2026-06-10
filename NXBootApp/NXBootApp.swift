@@ -10,7 +10,7 @@ struct NXBootApp: App {
     
     init() {
         // Enable NXBootKit debug logs so they are captured by Logger
-        NXBootKitDebugEnabled = true
+        NXBootKitSetDebugEnabled(true)
     }
     
     @Environment(\.openWindow) private var openWindow

@@ -2,6 +2,7 @@ import Foundation
 import Observation
 
 @Observable
+@MainActor
 class HekateManager {
     static let shared = HekateManager()
     

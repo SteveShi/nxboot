@@ -36,7 +36,7 @@ struct HekateView: View {
                             HStack {
                                 Text(String(localized: "Entry ID"))
                                 Spacer()
-                                TextField("e.g. atmospheric", text: Bindable(hekateManager).bootID)
+                                TextField(String(localized: "e.g. atmospheric"), text: Bindable(hekateManager).bootID)
                                     .textFieldStyle(.roundedBorder)
                                     .frame(width: 150)
                             }

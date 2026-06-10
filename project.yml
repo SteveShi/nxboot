@@ -24,11 +24,13 @@ targets:
       - NXBootKit
     settings:
       PRODUCT_BUNDLE_IDENTIFIER: io.steveshi.nxboot.cmd
+      PRODUCT_NAME: nxboot
       MACOSX_DEPLOYMENT_TARGET: 14.0
       CODE_SIGNING_ALLOWED: NO
       MARKETING_VERSION: 2.2.0
       CURRENT_PROJECT_VERSION: 1
       GCC_PREPROCESSOR_DEFINITIONS: $(inherited) NXBOOT_VERSION=\"2.2.0\" NXBOOT_BUILDNO=1
+      OTHER_LDFLAGS: $(inherited) -sectcreate __TEXT __intermezzo Shared/intermezzo.bin
     frameworks:
       - framework: IOKit
       - framework: CoreFoundation
@@ -40,15 +42,12 @@ targets:
     sources:
       - path: NXBootApp
       - path: NXBootKit
-    resources:
-      - path: NXBootApp/Assets.xcassets
-      - path: NXBootApp/Resources
       - path: Shared/intermezzo.bin
     settings:
       PRODUCT_NAME: NXBoot
       PRODUCT_BUNDLE_IDENTIFIER: io.steveshi.nxboot.app
       INFOPLIST_FILE: NXBootApp/Info.plist
-      SWIFT_VERSION: 5.0
+      SWIFT_VERSION: 6.0
       SDKROOT: macosx
       MACOSX_DEPLOYMENT_TARGET: 14.0
       ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
