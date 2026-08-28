@@ -36,21 +36,49 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO
 
-      - name: Export App
+      - name: Package App (Universal and arm64)
         run: |
-          mkdir -p build/app
-          cp -R NXBoot.xcarchive/Products/Applications/NXBoot.app build/app/
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+          if [ -z "$VERSION" ] && [ -f CHANGELOG.md ]; then
+            VERSION=$(sed -n '/## \[/p' CHANGELOG.md | head -n 1 | cut -d'[' -f2 | cut -d']' -f1)
+          fi
+          if [ -z "$VERSION" ]; then
+            VERSION="2.2.1"
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          
+          mkdir -p build/Universal build/arm64
+          cp -R NXBoot.xcarchive/Products/Applications/NXBoot.app build/Universal/
+          codesign --force --deep --sign - build/Universal/NXBoot.app
+          
+          # 1. Universal ZIP & DMG
+          cd build/Universal
+          zip -qy -r "$GITHUB_WORKSPACE/NXBoot-${VERSION}-universal.zip" NXBoot.app
+          cd "$GITHUB_WORKSPACE"
+          
+          mkdir -p dmg_root_universal
+          cp -R build/Universal/NXBoot.app dmg_root_universal/
+          hdiutil create -volname "NXBoot" -srcfolder dmg_root_universal -ov -format UDZO "NXBoot-${VERSION}-universal.dmg"
+          rm -rf dmg_root_universal
 
-      - name: Create ZIP
-        run: |
-          cd build/app
-          zip -r ../../NXBoot.zip NXBoot.app
+          # 2. arm64 Thinning & Signing
+          cp -R build/Universal/NXBoot.app build/arm64/
+          lipo -thin arm64 build/arm64/NXBoot.app/Contents/MacOS/NXBoot -output build/arm64/NXBoot.app/Contents/MacOS/NXBoot
+          if [ -f "build/arm64/NXBoot.app/Contents/MacOS/nxboot" ]; then
+            lipo -thin arm64 build/arm64/NXBoot.app/Contents/MacOS/nxboot -output build/arm64/NXBoot.app/Contents/MacOS/nxboot 2>/dev/null || true
+          fi
+          codesign --force --deep --sign - build/arm64/NXBoot.app
 
-      - name: Create DMG
-        run: |
-          mkdir -p build/dmg
-          cp -R build/app/NXBoot.app build/dmg/
-          hdiutil create -volname "NXBoot" -srcfolder build/dmg -ov -format UDZO NXBoot.dmg
+          # arm64 ZIP & DMG
+          cd build/arm64
+          zip -qy -r "$GITHUB_WORKSPACE/NXBoot-${VERSION}-arm64.zip" NXBoot.app
+          cd "$GITHUB_WORKSPACE"
+          
+          mkdir -p dmg_root_arm64
+          cp -R build/arm64/NXBoot.app dmg_root_arm64/
+          hdiutil create -volname "NXBoot" -srcfolder dmg_root_arm64 -ov -format UDZO "NXBoot-${VERSION}-arm64.dmg"
+          rm -rf dmg_root_arm64
 
       - name: Extract Release Notes
         id: release_notes
@@ -68,8 +96,10 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            NXBoot.dmg
-            NXBoot.zip
+            NXBoot-*-universal.zip
+            NXBoot-*-universal.dmg
+            NXBoot-*-arm64.zip
+            NXBoot-*-arm64.dmg
           body_path: changelog.txt
           draft: false
           prerelease: false
@@ -82,5 +112,7 @@ jobs:
         with:
           name: NXBoot-Build
           path: |
-            NXBoot.dmg
-            NXBoot.zip
+            NXBoot-*-universal.zip
+            NXBoot-*-universal.dmg
+            NXBoot-*-arm64.zip
+            NXBoot-*-arm64.dmg
