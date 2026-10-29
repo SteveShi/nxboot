@@ -309,10 +309,19 @@ BOOL NXExecCBFS(struct NXExecDesc const *desc, NSData *cbfsImage, NSString **err
 }
 
 struct NXExecDesc NXExecAcquireDeviceInterface(NXUSBDeviceInterface **device, NSString **err) {
+    if (!device || !*device) {
+        ERR(@"Invalid device interface");
+        return kNXExecDescInvalid;
+    }
+
     kern_return_t kr;
     struct NXExecDesc desc = kNXExecDescInvalid;
     io_iterator_t subIntfIter = 0;
     io_service_t intfService = 0;
+
+    // Retain the device interface for the lifetime of desc
+    NXCOMCall(device, AddRef);
+    desc.device = device;
 
     // open and configure device
     kr = NXCOMCall(device, USBDeviceOpenSeize);
@@ -420,13 +429,11 @@ struct NXExecDesc NXExecAcquireDeviceInterface(NXUSBDeviceInterface **device, NS
     }
     NXLog(@"USB: Bulk read pipe ID %u, write pipe ID %u", desc.readRef, desc.writeRef);
 
-    desc.device = device;
-
     return desc;
 
 cleanup_error:
     if (intfService) {
-        IOObjectRetain(intfService);
+        IOObjectRelease(intfService);
         intfService = 0;
         (void)intfService; // for analyzer
     }
@@ -435,18 +442,33 @@ cleanup_error:
         subIntfIter = 0;
         (void)subIntfIter; // for analyzer
     }
-    if (desc.intf) {
+    if (desc.intf && *desc.intf) {
         NXCOMCall(desc.intf, USBInterfaceClose);
         NXCOMCall(desc.intf, Release);
+        desc.intf = NULL;
     }
-    NXCOMCall(device, USBDeviceClose);
+    if (desc.device && *desc.device) {
+        NXCOMCall(desc.device, USBDeviceClose);
+        NXCOMCall(desc.device, Release);
+        desc.device = NULL;
+    }
     return kNXExecDescInvalid;
 }
 
-void NXExecReleaseDeviceInterface(struct NXExecDesc const *desc) {
-    NXCOMCall(desc->intf, USBInterfaceClose);
-    NXCOMCall(desc->intf, Release);
-    NXCOMCall(desc->device, USBDeviceClose);
+void NXExecReleaseDeviceInterface(struct NXExecDesc *desc) {
+    if (!desc) {
+        return;
+    }
+    if (desc->intf && *desc->intf) {
+        NXCOMCall(desc->intf, USBInterfaceClose);
+        NXCOMCall(desc->intf, Release);
+        desc->intf = NULL;
+    }
+    if (desc->device && *desc->device) {
+        NXCOMCall(desc->device, USBDeviceClose);
+        NXCOMCall(desc->device, Release);
+        desc->device = NULL;
+    }
 }
 
 static BOOL NXExecRelocatorIsCBFS(NSData *relocator) {
@@ -492,6 +514,9 @@ BOOL NXExecDesc(struct NXExecDesc const *desc, NSData *relocator, NSData *image,
 #import "NXUSBDevice.h"
 
 kern_return_t NXReadPipeTO(NXUSBSubInterface **intf, UInt8 pipeRef, void *buf, UInt32 *size, UInt32 timeout) {
+    if (!intf || !*intf) {
+        return kIOReturnNoDevice;
+    }
     return NXCOMCall(intf, ReadPipeTO, pipeRef, buf, size, timeout, timeout);
 }
 

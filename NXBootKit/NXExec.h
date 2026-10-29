@@ -25,7 +25,7 @@ struct NXExecDesc {
 extern struct NXExecDesc kNXExecDescInvalid;
 
 NXBOOTKIT_PUBLIC struct NXExecDesc NXExecAcquireDeviceInterface(NXUSBDeviceInterface **device, NSString **err);
-NXBOOTKIT_PUBLIC void NXExecReleaseDeviceInterface(struct NXExecDesc const *desc);
+NXBOOTKIT_PUBLIC void NXExecReleaseDeviceInterface(struct NXExecDesc *desc);
 NXBOOTKIT_PUBLIC BOOL NXExecDesc(struct NXExecDesc const *desc, NSData *relocator, NSData *image, NSString **err);
 
 NXBOOTKIT_PUBLIC kern_return_t NXReadPipeTO(NXUSBSubInterface **intf, UInt8 pipeRef, void *buf, UInt32 *size, UInt32 timeout);

@@ -71,20 +71,25 @@ class DeviceManager: NSObject, NXUSBDeviceEnumeratorDelegate {
     
     private func startSerialReading(device: NXUSBDevice) {
         readTask?.cancel()
+        
+        guard let deviceInterface = device.deviceInterface else {
+            return
+        }
+        
+        var err: NSString?
+        var desc = NXExecAcquireDeviceInterface(deviceInterface, &err)
+        guard desc.intf != nil else {
+            let errStr = err as String? ?? String(localized: "unknown")
+            Logger.shared.addLog(String(localized: "Could not acquire device interface for reading: \(errStr)"), type: .system)
+            return
+        }
+        
         let timeoutMS = self.usbReadTimeoutMS
-        let deviceInterface = device.deviceInterface
-        let wrappedInterface = SendableWrapper(value: deviceInterface)
+        let wrappedDesc = SendableWrapper(value: desc)
         readTask = Task.detached(priority: .background) {
             await Logger.shared.addLog(String(localized: "Attempting to read from USB EP1..."), type: .system)
             
-            var err: NSString?
-            var desc = NXExecAcquireDeviceInterface(wrappedInterface.value, &err)
-            guard desc.intf != nil else {
-                let errStr = err as String? ?? String(localized: "unknown")
-                await Logger.shared.addLog(String(localized: "Could not acquire device interface for reading: \(errStr)"), type: .system)
-                return
-            }
-            
+            var desc = wrappedDesc.value
             defer { NXExecReleaseDeviceInterface(&desc) }
             
             let bufferSize = AppConstants.usbBufferSize

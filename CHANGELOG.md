@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.2] - 2026-10-29
+
+<div lang="zh-Hans">
+
+### 修复
+- **修复 USB 串口日志读取导致的崩溃**：修复了在 Switch 重启或断开连接时，后台串口日志读取任务因 IOKit 设备接口引用计数过早释放导致空指针解引用（`EXC_BAD_ACCESS / KERN_INVALID_ADDRESS at 0x48`）的严重缺陷。
+- **IOKit COM 生命周期内存安全**：在 `NXExecAcquireDeviceInterface` 中显式通过 `AddRef` 增加接口持有，在 `NXExecReleaseDeviceInterface` 中配对执行 `Release` 并加入 NULL 空指针守卫与幂等清理。
+- **消除后台时序竞争**：在主线程同步获取并验证设备接口后再移交后台异步流式读取，杜绝野指针传递。
+- **修复 IOKit 服务对象泄漏**：修复了异常清理分支中误用 `IOObjectRetain` 导致的系统资源泄漏。
+
+</div>
+
+---
+
+<div lang="en">
+
+### Fixed
+- **Fixed Crash in USB Serial Log Reading**: Resolved a critical bug causing an `EXC_BAD_ACCESS (KERN_INVALID_ADDRESS at 0x48)` segmentation fault during serial log reading on device disconnect or reboot.
+- **IOKit COM Reference Safety**: Explicitly retained device interface via `AddRef` in `NXExecAcquireDeviceInterface`, paired with `Release` and NULL safety checks in `NXExecReleaseDeviceInterface`.
+- **Eliminated Concurrency Race**: Synchronously acquired and validated device interface on the main thread before dispatching to the background reading task.
+- **Fixed IOKit Service Leak**: Corrected erroneous `IOObjectRetain` call in interface acquisition error cleanup.
+
+</div>
+
 ## [2.2.1] - 2026-06-10
 
 <div lang="zh-Hans">
